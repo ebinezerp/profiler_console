@@ -5,7 +5,7 @@ import java.util.Date;
 public class PersonalData {
 	
 	
-	private int profile_Id;
+	private long profile_Id;
 	private String firstname;
 	private String lastname;
 	private String gender;
@@ -14,9 +14,29 @@ public class PersonalData {
 	private String city;
 	private long supervisor;
 	
+	public PersonalData()
+	{
+		
+	}
 	
 	
-	
+	public PersonalData(long profile_Id, String firstname, String lastname, String gender, Date date_Of_Birth,boolean marital_Status, String city, long supervisor) {
+		super();
+		this.profile_Id = profile_Id;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.gender = gender;
+		this.date_Of_Birth = date_Of_Birth;
+		this.marital_Status = marital_Status;
+		this.city = city;
+		this.supervisor = supervisor;
+	}
+
+
+
+
+
+
 	public String getCity() {
 		return city;
 	}
@@ -29,10 +49,10 @@ public class PersonalData {
 	public void setSupervisor(long supervisor) {
 		this.supervisor = supervisor;
 	}
-	public int getProfile_Id() {
+	public long getProfile_Id() {
 		return profile_Id;
 	}
-	public void setProfile_Id(int profile_Id) {
+	public void setProfile_Id(long profile_Id) {
 		this.profile_Id = profile_Id;
 	}
 	public String getFirstname() {

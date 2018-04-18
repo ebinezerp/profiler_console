@@ -5,46 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.niit.profiler.model.Profile;
 import com.niit.profiler.utility.DBConnection;
 
-public class ProfileRepository {
-	
-	private Connection connection;
-	private static Properties properties;
-	static
-	{
-		FileInputStream fileInputStream=null;
-	     try {
-	    	 fileInputStream=new FileInputStream("reg_exp.properties");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-	     
-	     
-	     properties=new Properties();
-	     
-	     
-	     try {
-			properties.load(fileInputStream);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public ProfileRepository()
-	{
-		connection=new DBConnection().getConnection();
-	}
-	
-	
+public class ProfileRepository extends Repository {
 	
 	public boolean insert(Profile profile)
 	{
@@ -155,6 +128,104 @@ public class ProfileRepository {
 		}
 		
 	}
+	
+	
+	public Profile getProfile(long profile_id)
+	{
+		PreparedStatement preparedStatement;
+		Profile profile=null;
+		try {
+			preparedStatement=connection.prepareStatement("select * from profile where profile_id=?");
+			preparedStatement.setLong(1, profile_id);
+			ResultSet rs=preparedStatement.executeQuery();
+			if(rs.next())
+			{
+				profile=new Profile(rs.getLong("profile_id"), rs.getString("username"), rs.getString("email"), rs.getString("mobile"), rs.getString("password"), rs.getString("role"), rs.getBoolean("status"));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return profile;
+	}
+	
+	
+	
+	
+	public Set<Profile> getUnApprovedProfiles()
+	{
+		Statement statement=null;
+		HashSet<Profile> profiles=new HashSet<Profile>();
+		
+		try {
+			statement=connection.createStatement();
+			ResultSet rs=statement.executeQuery("select * from profile where status=false");
+			while(rs.next())
+			{
+				profiles.add(new Profile(rs.getLong("profile_id"), rs.getString("username"), rs.getString("email"), rs.getString("mobile"), rs.getString("password"), rs.getString("role"), rs.getBoolean("status")));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return profiles;
+	}
+	
+	
+	
+	
+	
+	public Set<Profile> getApprovedProfiles()
+	{
+		Statement statement=null;
+		HashSet<Profile> profiles=new HashSet<Profile>();
+		
+		try {
+			statement=connection.createStatement();
+			ResultSet rs=statement.executeQuery("select * from profile where status=true");
+			while(rs.next())
+			{
+				profiles.add(new Profile(rs.getLong("profile_id"), rs.getString("username"), rs.getString("email"), rs.getString("mobile"), rs.getString("password"), rs.getString("role"), rs.getBoolean("status")));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return profiles;
+	}
+	
+	
+	
+	public Profile loginValidate(String username,String password)
+	{
+		PreparedStatement preparedStatement;
+		Profile profile=null;
+		try {
+			preparedStatement=connection.prepareStatement("select * from profile where username=? and password=?");
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			ResultSet rs=preparedStatement.executeQuery();
+			if(rs.next())
+			{
+				profile=new Profile(rs.getLong("profile_id"), rs.getString("username"), rs.getString("email"), rs.getString("mobile"), rs.getString("password"), rs.getString("role"), rs.getBoolean("status"));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return profile;
+	}
+	
+	
+	
 	
 	
 	

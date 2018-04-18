@@ -44,5 +44,8 @@ public class PlacementDetails {
 		return "PlacementDetails [profile_id=" + profile_id + ", companyName=" + companyName + ", designation="
 				+ designation + ", joiningLocation=" + joiningLocation + "]";
 	}
+	
+	
+	
 
 }
